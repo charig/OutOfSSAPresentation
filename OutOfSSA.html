@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="/css/reveal.css">
+		<link rel="stylesheet" href="/css/theme/simple.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="/lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = '/text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? '/css/print/pdf.css' : '/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+    </head>
+    
+    <style type="text/css">
+        /* 1. Style header/footer <div> so they are positioned as desired. */
+        #header-left {
+            position: absolute;
+            top: 0%;
+            left: 0%;
+        }
+        #header-right {
+            position: absolute;
+            top: 0%;
+            right: 0%;
+        }
+        #footer-left {
+            position: absolute;
+            bottom: 0%;
+            left: 0%;
+        }
+    </style>
+
+    <!-- 2. Create hidden header/footer <div> -->
+    <div id="hidden" style="display:none;">
+        <div id="header">
+            <div id="header-left">HEADER-LEFT</div>
+            <div id="header-right">HEADER-RIGHT</div>
+            <div id="footer-left">FOOTER-LEFT</div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript">
+        // 3. On Reveal.js ready event, copy header/footer <div> into each `.slide-background` <div>
+        var header = $('#header').html();
+        if ( window.location.search.match( /print-pdf/gi ) ) {
+            Reveal.addEventListener( 'ready', function( event ) {
+                $('.slide-background').append(header);
+            });
+        }
+        else {
+            $('div.reveal').append(header);
+    }
+    </script>
+
+    <body>
+		<div class="reveal">
+			<div class="slides">
+                <section data-markdown="Sections/RIRBackground.md" data-separator="^\r?\n----\r?\n$" data-separator-vertical="^\r?\n---\r?\n$" data-separator-notes="^Note:"></section>
+                <section data-markdown="Sections/SSABackground.md" data-separator="^\r?\n----\r?\n$" data-separator-vertical="^\r?\n---\r?\n$" data-separator-notes="^Note:"></section>
+                <section data-markdown="Sections/OutOfSSA.md" data-separator="^\r?\n----\r?\n$" data-separator-vertical="^\r?\n---\r?\n$" data-separator-notes="^Note:"></section>
+                <section data-markdown="Sections/References.md" data-separator="^\r?\n----\r?\n$" data-separator-vertical="^\r?\n---\r?\n$" data-separator-notes="^Note:"></section>
+			</div>
+		</div>
+
+		<script src="/lib/js/head.min.js"></script>
+		<script src="/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				dependencies: [
+					{ src: '/plugin/markdown/marked.js' },
+					{ src: '/plugin/markdown/markdown.js' },
+					{ src: '/plugin/notes/notes.js', async: true },
+					{ src: '/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); }}, 
+                    { src: '/node_modules/reveal.js-menu/menu.js' }
+				]
+			});
+		</script>
+	</body>
+</html>

@@ -1,5 +1,9 @@
 ## <span style="color:blue">S</span>tatic <span style="color:blue">S</span>ingle <span style="color:blue">A</span>ssignment 
-### Motivation <!-- .element: class="fragment" -->
+
+---
+
+## Motivation <!-- .element: class="fragment" -->
+
 - Some code optimizations are NP-complete or even undecidable <!-- .element: class="fragment" -->
 - The nature of the intermediate representation affects the speed and power of the compiler <!-- .element: class="fragment" -->
 

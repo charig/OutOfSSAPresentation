@@ -1,5 +1,7 @@
 ## Correctness
 
+---
+
 Phi Congruence Class  =Int All variables (transitively) connected through a PHI function 
 
 All variables within the same congruence class must not interfere <!-- .element: class="fragment" -->

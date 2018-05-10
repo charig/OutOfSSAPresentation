@@ -1,7 +1,5 @@
 ## Code Quality
 
-TODO: Show PIR 2 RIR example without optimizations
-
 Note:
 As seen a naive translation out of SSA further increases the number of new variables and the code size, 
 because PHI functions are replaced by variables and copies from/to these variables.

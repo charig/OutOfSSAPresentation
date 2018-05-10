@@ -114,3 +114,36 @@ Note: 2009 CGO Paper Revisits Out-of-SSA and found from previous approaches that
 2. Incomplete
 3. Overly pessimistic
 4. Too expensive
+
+---
+
+## Cytron et al. (1991)
+
+"Naively, a *k*-input φ-function at entrance of a node *X* can be replaced by *k* ordinary assignments, one at the end of each control flow predecessor of *X*."
+
++ DCE + coloring
+
+---
+
+## Briggs et al. (1998)
+
+Fix Cytron: Problems with critical edges - the φ-functions in one BB have parallel semantics. Eg. the lost-copy problem, the swap problem.
+
+---
+
+## Sreedhar et al. (1999)
+
+Fix Briggs: φ-congruence classes, and inserting copies in the BB of φ-functions
+
+---
+
+## Leung & George, Budimlić et al., Rastello et al.
+
+papers identifying and dealing with renaming constraints and dedicated registers
+
+---
+
+## Boissinot et al. (2009)
+
+Revisit previous work
+Fix Briggs: Considering live-out sets may not be enough + sometimes NOT POSSIBLE to split critical edge by inserting a copy. Copies inserted are parallel (sequentialization alg.), coalescing used to improve, but intersection tested using SSA properties - live ranges and value equality

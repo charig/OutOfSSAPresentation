@@ -92,3 +92,24 @@ SSA is also a good choice for <span style="color:blue">J</span>ust <span style="
 2. LLVM
 3. Graal
 4. Julia?
+
+---
+
+## Moving Out of SSA
+
+Optimizations create situations where the SSA variables arising from the same original variable now have overlapping live ranges.
+
+---
+
+## Factors to Take into Account
+
+1. Correctness
+2. Code Quality
+3. Efficiency
+
+Note: 2009 CGO Paper Revisits Out-of-SSA and found from previous approaches that they were:
+
+1. Incorrect
+2. Incomplete
+3. Overly pessimistic
+4. Too expensive

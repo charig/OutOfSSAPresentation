@@ -8,6 +8,6 @@
 
 ## Summary / Takeaways
 
-* Goal 1
-* Goal 2
-* Goal 3
+* Goal 1 <!-- .element: class="fragment" -->
+* Goal 2 <!-- .element: class="fragment" -->
+* Goal 3 <!-- .element: class="fragment" -->

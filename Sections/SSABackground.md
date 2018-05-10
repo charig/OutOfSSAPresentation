@@ -2,7 +2,7 @@
 
 ---
 
-## Motivation <!-- .element: class="fragment" -->
+## Motivation 
 
 - Some code optimizations are NP-complete or even undecidable <!-- .element: class="fragment" -->
 - The nature of the intermediate representation affects the speed and power of the compiler <!-- .element: class="fragment" -->
@@ -14,39 +14,53 @@ In practice, factors such as the programmer's willingness to wait for the compil
 
 ## SSA is mainly a naming convention for variables
 
-A program is in SSA form if each variable is a target of exactly one assignment in the program text <!-- .element: class="fragment" -->
+A program is in SSA form if each variable is assigned exactly once <!-- .element: class="fragment" -->
+
+<div style="text-align: left; float: left; width: 50%">
+``` 
+x = 1;
+y = x + 1;
+x = 2;
+z = x + 1;
+```                     
+</div> <!-- .element: class="fragment" -->
+<div style="text-align: right; float: right; width: 50%">
+``` 
+x1 = 1;
+y = x1 + 1;
+x2 = 2;
+z = x2 + 1;
+```                     
+</div>
+<!-- .element: class="fragment" -->
 
 Referencial Transparency <!-- .element: class="fragment" -->
 
-``` 
-x = 1;                                               x1 = 1;
-y = x + 1;                                           y = x1 + 1;
-x = 2;                                               x2 = 2;
-z = x + 1;                                           z = x2 + 1;
-```                     
-<!-- .element: class="fragment" -->
-
 Note: 
 
-Note that one assignment in the program text does not prevent multiple assignments to a variable during program execution (loops). 
+Note that one assignment in the program text does not prevent multiple assignments to a variable during program execution (loops)
 
 ---
 
 ## Intuition
 
-Having unique names for distinct entities reduces uncertainty and imprecision
+Unique names for distinct entities reduces uncertainty and imprecision
 
-Cliff Click: 
-> <span style="font-size: 0.5em">SSA form allows the convenient expression of a variety of **data-flow analyses**. 
-> Quick access through use-def chains and the manifestation of merge points simplify a number of
-> problems. In addition, use-def chains and SSA form allow the old bit vector and integer
-> vector analyses to be replaced with sparse analyses. </span>
+Note:
+If a variable has D definitions and U uses, then there can be D x U def-use chains. 
+Encoded in SSA form, there can be at most E where E is the number of
+edges in the control flow graph. 
+
 
 ---
 
 ## PHI Functions
-
-![](Images/PhiExample.png) <!-- .element height="20%" width="85%" style="background:none; border:none; box-shadow:none;"-->
+<div style="text-align: left; float: left; width: 50%">
+![](Images/BranchNoSSACode.png) <!-- .element height="20%" width="40%" style="background:none; border:none; box-shadow:none; "-->
+</div>
+<div style="text-align: right; float: right; width: 50%">
+![](Images/BranchSSACFG.png) <!-- .element height="20%" width="85%" style="background:none; border:none; box-shadow:none;" class="fragment"-->
+</div>
 
 Note:
 In terms of their position, φ-functions⋆are generally placed at control-flow merge points, i.e., at the heads of basic blocks that have multiple predecessors in control-flow graphs. The behavior of the φ-function is to select dynamically the value of the parameter associated with the actually executed control-flow path into b. This parameter value is assigned to the fresh variable name, on the left-hand-side of the φ-function.
@@ -59,19 +73,41 @@ In terms of their position, φ-functions⋆are generally placed at control-flow 
 
 ---
 
+## SSA enables the convenient expression of several **data-flow analyses**
+
+---
+
+### Industrial Strength Compilers Use SSA 
+* GCC
+* LLVM
+* JIT Compilers
+    - HotSpot JVM
+    - V8
+    - Graal
+
+Note: 
+Cliff Clicks Thesis: 
+Quick access through use-def chains and the manifestation of merge points simplify a number of
+problems. In addition, use-def chains and SSA form allow the old bit vector and integer
+vector analyses to be replaced with sparse analyses. 
+
+---
+
 ## <span style="color:blue">C</span>ontrol <span style="color:blue">F</span>low <span style="color:blue">G</span>raph
 
 ```
-BB0: if true then S1 else S2 
+BB0: v1 = 2
+     push true 
+     branchIfTrue BB2 
 BB1: v1 = 1
      jmp BB3
 BB2: v1 = 2
 BB3: val := v1 + v2 \\ This 3-address operators are dubbed quads
 ```
 
-* Is val a constant?
-    - Is v1 a constant?
-    - Is v2 a constant?
+* Is val a constant? <!-- .element: class="fragment" -->
+    - Is v1 a constant? <!-- .element: class="fragment" -->
+    - Is v2 a constant? <!-- .element: class="fragment" -->
 
 
 Note:
@@ -82,16 +118,19 @@ Data-flow analysis collects information about programs at compile time in order 
 
 ---
 
-## Alternatives
+## SSA Example
+
+![](Images/zeroAnalysis.png) <!-- .element height="20%" width="85%" style="background:none; border:none; box-shadow:none;" -->
+
+Note:
+
+When a program is translated into SSA form, variables are renamed at definition points. For certain data-flow problems (e.g. constant propagation) this is exactly the set of program points where data-flow facts may change
 
 1. Vectors with assigment locations for each variable.
     - Carry lot of (unnecessary) information
 2. Use-Def Chains
-    - Merge chains before every use for each variable
-3. SSA
-    - Merge when definitions interfere 
+    - They are much easier in SSA Form
 
-Note: 
 The compiler must carry information about assignments to each variable forward to all possible
 uses of. This requires carrying vectors of information around, even to assignments that do not use b.
 
@@ -103,31 +142,23 @@ In SSA each variable is assigned only once. Because of this, we only need one us
 
 ---
 
-## SSA Example
+## SSA Example II
 
-![](Images/zeroAnalysis.png) <!-- .element height="20%" width="85%" -->
+![](Images/constantPropagation.png) <!-- .element height="20%" width="85%" style="background:none; border:none; box-shadow:none;" -->
 
 Note:
-Building SSA form is not trivial. The compiler must rename the target variable
-in each assignment to a new name; it must also rename the uses to be consistent with
-the new names. Any time two CFG paths meet, the compiler needs a new name, even
-when no assignment is evident. 
 
-If a variable has D definitions and U uses, then there can be D x U def-use chains. 
-Encoded in SSA form, there can be at most E where E is the number of
-edges in the control flow graph. 
-
-When a program is translated into SSA form, variables are renamed at definition points. For certain data-flow problems (e.g. constant propagation) this is exactly the set of program points where data-flow facts may change
+Alternatives
 
 ---
 
-## SSA "Users"
-1. GCC
-2. LLVM
-3. JIT Compilers
-    - HotSpot JVM
-    - V8
-    - Graal
+## Analysis Easier in SSA
+
+* Copy progragation
+* Constant propagation
+* Liveness analysis
+* Redundancy elimination
+* ...
 
 ---
 

@@ -1,4 +1,4 @@
-## <span style="color:blue">R</span> <span style="color:blue">I</span>ntermediatte <span style="color:blue">R</span>epresentation
+## <span style="color:blue">R</span> <span style="color:blue">I</span>ntermediate <span style="color:blue">R</span>epresentation
 
 RIR encompasses a whole (eventually speculative) compilation infrastructure for R.
 

@@ -1,6 +1,12 @@
 ## Moving Out of SSA
 
+... -> SSA form -> optimizations -> SSA destruction (ie. φ-functions elimination)
+
 Optimizations create situations where the SSA variables arising from the same original variable now have overlapping live ranges.
+
+Note: optimizations easier in SSA... examples?
+- but they can break the conventional SSA property (CSSA - renaming all φ input and output operands to the same name preserves semantics)
+- freshly constructed SSA is CSSA, optimizations break this
 
 ---
 
@@ -12,7 +18,7 @@ Optimizations create situations where the SSA variables arising from the same or
 
 > A definition of interference for variables involved in PHI functions is missing.
 
-*[Revisiting Out-of-SSA Translation for Correctness, Code Quality and Efficiency (CGO '09)](https://dl.acm.org/citation.cfm?id=1545063)
+*[Revisiting Out-of-SSA Translation for Correctness, Code Quality and Efficiency (CGO '09)](https://dl.acm.org/citation.cfm?id=1545063)*
 
 Note: 2009 CGO Paper Revisits Out-of-SSA and found from previous approaches that they were:
 
@@ -78,6 +84,20 @@ To optimize later, dead code elmimination + coloring.
 
 TODO Example.
 
+```
+BB 1:
+  x <- ...
+  y <- ...
+BB 2:
+  t <- x
+  x <- y
+  y <- t
+  conditional jump to BB 2 or BB 3
+BB 3:
+  ... <- x
+  ... <- y
+```
+
 Note:
 
 ---
@@ -97,4 +117,43 @@ because PHI functions are replaced by variables and copies from/to these variabl
 
 Example:
 TODO
+
+
+
+
+
+---
+
+## distribute into prev slides:
+
+---
+
+## distribute into prev slides:
+
+1. Cytron et al. (1991): "Naively, a *k*-input φ-function at entrance of a node *X* can be replaced by *k* ordinary assignments, one at the end of each control flow predecessor of *X*."
++ DCE + coloring
+
+---
+
+## distribute into prev slides:
+
+2. Briggs et al. (1998): Fix Cytron: Problems with critical edges - the φ-functions in one BB have parallel semantics. Eg. the lost-copy problem, the swap problem.
+
+---
+
+## distribute into prev slides:
+
+3. Sreedhar et al. (1999): Fix Briggs: φ-congruence classes, and inserting copies in the BB of φ-functions
+
+---
+
+## distribute into prev slides:
+
+4. (papers identifying and dealing with renaming constraints and dedicated registers)
+
+---
+
+## distribute into prev slides:
+
+5. Boissinot et al. (2009): revisit previous work, Fix Briggs: Considering live-out sets may not be enough + sometimes NOT POSSIBLE to split critical edge by inserting a copy. Copies inserted are parallel (sequentialization alg.), coalescing used to improve, but intersection tested using SSA properties - live ranges and value equality
 

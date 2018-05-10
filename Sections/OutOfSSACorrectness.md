@@ -23,9 +23,11 @@ Since they do not interfere they can be replaced by the same name without interf
 
 ## After copy propagation
 
-![](Images/afterCopyProp.png) <!-- .element height="10%" width="40%" -->
+After opt SSA variables arising from the same variable may have overlapping live ranges.
 
-CSSA is lost. If we use the same name for *y* and *x1* we break the semantics. <!-- .element: class="fragment" -->
+![](Images/afterCopyProp.png) <!-- .element height="10%" width="40%" class="fragment"-->
+
+CSSA is lost. Same name for y and x1 breaks semantics. <!-- .element: class="fragment" -->
 
 Note:
 However CSSA is too restrictive:
@@ -34,15 +36,18 @@ However CSSA is too restrictive:
 
 ---
 
-## Solution to Preserve Semantics
+## Solution 
 
-Optimize and then convert to CSSA when moving out of SSA
+1. Optimize, then 
+2. Convert to CSSA when moving out of SSA
 
 ---
 
 ## Naive approach: Insert copies everywhere!
 
 TODO: Example.
+
+Cytron et al '91
 
 Note:
 A k-input PHI at entrance of a node X can be replaced by k assignments at the end of each predecessor X. 
@@ -75,6 +80,8 @@ Note:
 
 ## Solution: Add more copies!!!
 
-Example
+Example:
+
+Briggs et al.
 
 Note:

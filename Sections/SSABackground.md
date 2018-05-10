@@ -1,12 +1,34 @@
-## <span style="color:blue">S</span>tatic <span style="color:blue">S</span>ingle <span style="color:blue">A</span>ssignment
+## <span style="color:blue">S</span>tatic <span style="color:blue">S</span>ingle <span style="color:blue">A</span>ssignment 
+Motivation <!-- .element: class="fragment" -->
+- Some code optimization problems are NP-complete, or even undecidable <!-- .element: class="fragment" -->
+- The nature of the intermediate representation affects the speed and power of the compiler <!-- .element: class="fragment" -->
 
-The nature of the intermediate representation affects the speed and power of the
-compiler.
+Note: 
+In practice, factors such as the programmer's willingness to wait for the compiler to complete its task place upper limits on the optimizations that a compiler implementor might provide.
 
 ---
 
-## Motivation
-It has been shown that some code optimization problems are NP-complete, or even undecidable. In practice, factors such as the programmer's willingness to wait for the compiler to complete its task place upper limits on the optimizations that a compiler implementor might provide.
+## Definition
+
+A program is in SSA form if each variable is a target of exactly one assignment in the program text
+
+Note: 
+
+SSA -> Referencial Transparency -> The value of a variable does not depend on the positions in the program
+
+One assignment in the program text does not prevent multiple assignments to a variable during program execution (loops). 
+
+---
+
+## Intuition
+
+Having unique names for distinct entities reduces uncertainty and imprecision
+
+Cliff Click: 
+> <span style="font-size: 0.5em">SSA form allows the convenient expression of a variety of **data-flow analyses**. 
+> Quick access through use-def chains and the manifestation of merge points simplify a number of
+> problems. In addition, use-def chains and SSA form allow the old bit vector and integer
+> vector analyses to be replaced with sparse analyses. </span>
 
 ---
 
@@ -48,28 +70,13 @@ Use-def chains represent quick pointers from uses of a variable to the set of it
 However, many definitions can reach the quad along a different path in the CFG. 
 When deciding what happened to b, the compiler must merge the information from each use-def chain.
 
-SSA is an alternative to solve this. so called because each variable is assigned only once. 
-Because of this, we only need one use-def chain per use of a variable. 
+In SSA each variable is assigned only once. Because of this, we only need one use-def chain per use of a variable. 
 
 ---
 
 ## SSA Example
 
-```
-if( … ) x := 1;             if( … ) x0 := 1;
-else x := 2;                else x1 := 2;
-… x…                        x2 := φ( x0, x1);
-                            …x2…
-```
-
-Cliff Click (Thesis): 
-
-
-> <span style="font-size: 0.5em">SSA form allows the convenient expression of a variety of data-flow analyses. 
-> Quick access through use-def chains and the manifestation of merge points simplify a number of
-> problems. In addition, use-def chains and SSA form allow the old bit vector and integer
-> vector analyses to be replaced with sparse analyses. </span>
-
+![](Images/zeroAnalysis.png) <!-- .element height="20%" width="85%" -->
 
 Note:
 Building SSA form is not trivial. The compiler must rename the target variable
@@ -83,25 +90,19 @@ edges in the control flow graph.
 
 ---
 
-## SSA Status
-Since several data-flow optimizaions in SSA are fast and powerful, 
-SSA is also a good choice for <span style="color:blue">J</span>ust <span style="color:blue">I</span>n <span style="color:blue">T</span>ime Compilers
-
-1. HotSpot
-2. C#
+## SSA "Users"
+1. GCC
 2. LLVM
-3. Graal
-4. Julia?
+3. JIT Compilers
+    - HotSpot JVM
+    - V8
+    - Graal
 
 ---
 
 ## Moving Out of SSA
 
-Optimizations create situations where the SSA variables arising from the same original variable now have overlapping live ranges.
-
----
-
-## Factors to Take into Account
+Factors to Take into Account
 
 1. Correctness
 2. Code Quality

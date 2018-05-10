@@ -69,7 +69,6 @@ Note:
 Source
 ``` 
 function(x) { if (x) y <- 1 else y <- 2; y }
-
 ```
 
 RIR
@@ -93,9 +92,10 @@ RIR
 
 ## RIR After PIR Naive
 
-<div style="text-align: left; float: left; width: 30%; height: 50%">
+<div style="text-align: left; float: left; width: 30%">
+
 ```
-   ldarg_  0          
+   ldarg_  0
    stloc_  @1
    ldloc_  @1
    force_
@@ -109,8 +109,8 @@ RIR
    ldloc_  @4
    brtrue_  0
 ```
-</div>
-<div style="text-align: right; float: right; width: 70%; height: 50%"></div>
+</div> <!-- .element: class="fragment" -->
+<div style="text-align: left; float: right; width: 70%">
 ```
    push_  8 # [1] 2
    stloc_  @5
@@ -125,6 +125,7 @@ RIR
    ldloc_  @7
    ret_
 ```
+</div> <!-- .element: class="fragment" -->
 
 ---
 

@@ -1,6 +1,6 @@
 ## <span style="color:blue">S</span>tatic <span style="color:blue">S</span>ingle <span style="color:blue">A</span>ssignment 
-Motivation <!-- .element: class="fragment" -->
-- Some code optimization problems are NP-complete, or even undecidable <!-- .element: class="fragment" -->
+### Motivation <!-- .element: class="fragment" -->
+- Some code optimizations are NP-complete or even undecidable <!-- .element: class="fragment" -->
 - The nature of the intermediate representation affects the speed and power of the compiler <!-- .element: class="fragment" -->
 
 Note: 
@@ -8,15 +8,23 @@ In practice, factors such as the programmer's willingness to wait for the compil
 
 ---
 
-## Definition
+## SSA is mainly a naming convention for variables
 
-A program is in SSA form if each variable is a target of exactly one assignment in the program text
+A program is in SSA form if each variable is a target of exactly one assignment in the program text <!-- .element: class="fragment" -->
+
+Referencial Transparency <!-- .element: class="fragment" -->
+
+``` 
+x = 1;                                               x1 = 1;
+y = x + 1;                                           y = x1 + 1;
+x = 2;                                               x2 = 2;
+z = x + 1;                                           z = x2 + 1;
+```                     
+<!-- .element: class="fragment" -->
 
 Note: 
 
-SSA -> Referencial Transparency -> The value of a variable does not depend on the positions in the program
-
-One assignment in the program text does not prevent multiple assignments to a variable during program execution (loops). 
+Note that one assignment in the program text does not prevent multiple assignments to a variable during program execution (loops). 
 
 ---
 
@@ -29,6 +37,21 @@ Cliff Click:
 > Quick access through use-def chains and the manifestation of merge points simplify a number of
 > problems. In addition, use-def chains and SSA form allow the old bit vector and integer
 > vector analyses to be replaced with sparse analyses. </span>
+
+---
+
+## PHI Functions
+
+![](Images/PhiExample.png) <!-- .element height="20%" width="85%" style="background:none; border:none; box-shadow:none;"-->
+
+Note:
+In terms of their position, φ-functions⋆are generally placed at control-flow merge points, i.e., at the heads of basic blocks that have multiple predecessors in control-flow graphs. The behavior of the φ-function is to select dynamically the value of the parameter associated with the actually executed control-flow path into b. This parameter value is assigned to the fresh variable name, on the left-hand-side of the φ-function.
+
+---
+
+## Parallel Copy Semantics
+
+![](Images/ParallelCopy.png) <!-- .element height="20%" width="60%" style="background:none; border:none; box-shadow:none;"-->
 
 ---
 
@@ -50,6 +73,8 @@ BB3: val := v1 + v2 \\ This 3-address operators are dubbed quads
 Note:
 The CFG is a directed graph. The vertices represent basic blocks and the edges represent possible directions
 of program control flow. A basic block is a section of code with no control flow.
+
+Data-flow analysis collects information about programs at compile time in order to make optimizing code transformations.
 
 ---
 
@@ -84,9 +109,11 @@ in each assignment to a new name; it must also rename the uses to be consistent 
 the new names. Any time two CFG paths meet, the compiler needs a new name, even
 when no assignment is evident. 
 
-If a variable has D definitions and U uses, then there can be D x U clef-use chains. 
+If a variable has D definitions and U uses, then there can be D x U def-use chains. 
 Encoded in SSA form, there can be at most E where E is the number of
 edges in the control flow graph. 
+
+When a program is translated into SSA form, variables are renamed at definition points. For certain data-flow problems (e.g. constant propagation) this is exactly the set of program points where data-flow facts may change
 
 ---
 
@@ -114,36 +141,3 @@ Note: 2009 CGO Paper Revisits Out-of-SSA and found from previous approaches that
 2. Incomplete
 3. Overly pessimistic
 4. Too expensive
-
----
-
-## Cytron et al. (1991)
-
-"Naively, a *k*-input φ-function at entrance of a node *X* can be replaced by *k* ordinary assignments, one at the end of each control flow predecessor of *X*."
-
-+ DCE + coloring
-
----
-
-## Briggs et al. (1998)
-
-Fix Cytron: Problems with critical edges - the φ-functions in one BB have parallel semantics. Eg. the lost-copy problem, the swap problem.
-
----
-
-## Sreedhar et al. (1999)
-
-Fix Briggs: φ-congruence classes, and inserting copies in the BB of φ-functions
-
----
-
-## Leung & George, Budimlić et al., Rastello et al.
-
-papers identifying and dealing with renaming constraints and dedicated registers
-
----
-
-## Boissinot et al. (2009)
-
-Revisit previous work
-Fix Briggs: Considering live-out sets may not be enough + sometimes NOT POSSIBLE to split critical edge by inserting a copy. Copies inserted are parallel (sequentialization alg.), coalescing used to improve, but intersection tested using SSA properties - live ranges and value equality

@@ -2,56 +2,11 @@
 
 ---
 
-## Example
-
-Source
-``` 
-example <- function(a) { x <- 3; x + a + x } 
-
-```
-
-Rir
-```
-push_  84 # [1] 3
-stvar_  25 # x
-ldvar_  25 # x
-ldvar_  46 # a
-add_
-ldvar_  25 # x
-add_
-ret_
-
-```
-
----
-
-## PIR Stack Machine
-
-```
-ldarg_  1
-stloc_  @0
-push_  84 # [1] 3
-stloc_  @1
-ldloc_  @0
-force_
-stloc_  @2
-ldloc_  @2
-ldloc_  @1
-add_
-stloc_  @3
-ldloc_  @1
-ldloc_  @3
-add_
-ret_
-
-```
-
----
 
 ## Problems of Stack
 
 1. Mapping back Registers to Stack
-2. SSA redundant copies may be more harmful that in machine code  
+2. SSA redundant copies may be more harmful than in machine code  
 
 Note: 
 The first kind of copies are just introduced because we are using stack machine.
@@ -62,7 +17,7 @@ The problem is mainly that we have stack operands in rir, but then we move to a 
 
 ---
 
-## Example
+## Mapping Regs to Stack
 
 SSA
 ```
@@ -109,8 +64,73 @@ Note:
 
 ---
 
+## Mappings + extra PHI copies
+
+Source
+``` 
+function(x) { if (x) y <- 1 else y <- 2; y }
+
+```
+
+RIR
+```
+   ldvar_  5 # x
+   asbool_
+   brtrue_  0
+   push_  8 # [1] 2
+   stvar_  9 # y
+   br_  1
+0:
+   push_  10 # [1] 1
+   stvar_  9 # y
+1:
+   ldvar_  9 # y
+   ret_
+
+```
+
+---
+
+## RIR After PIR Naive
+
+<div style="text-align: left; float: left; width: 30%; height: 50%">
+```
+   ldarg_  0          
+   stloc_  @1
+   ldloc_  @1
+   force_
+   stloc_  @2
+   ldloc_  @2
+   aslogical_
+   stloc_  @3
+   ldloc_  @3
+   asbool_
+   stloc_  @4
+   ldloc_  @4
+   brtrue_  0
+```
+</div>
+<div style="text-align: right; float: right; width: 70%; height: 50%"></div>
+```
+   push_  8 # [1] 2
+   stloc_  @5
+   movloc_  @5 -> @0  # ssa copy predecessor 
+   br_  1
+0:
+   push_  10 # [1] 1
+   stloc_  @6
+   movloc_  @6 -> @0  # ssa copy predecessor
+1:
+   movloc_  @0 -> @7  # ssa copy after phi
+   ldloc_  @7
+   ret_
+```
+
+---
+
 ## Concepts
 
+- Phi parallel copies semantics
 - Phi Congruence Classes
 - Live Analysis
     - Live Ranges
@@ -119,6 +139,7 @@ Note:
 - Coalescing
 - Register Allocator
 - Spilling
+
 
 Note:
 So we start with a simple compiler, and now by needing to move out of ssa to a stack machine we had to revise and implements all this kind of concepts/algorithms,etc. 

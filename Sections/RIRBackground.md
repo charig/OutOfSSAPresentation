@@ -15,25 +15,6 @@ function(x)
 
 ---
 
-```
-function(x)
-  x+y
-```
-
-to
-
-```
-guard_fun_  `+` == .Primitive(+)
-ldvar_  x
-ldvar_  y
-add_
-ret_
-```
-
-But what are `x` and `y`?
-
----
-
 ### "call-by-environment"
 
 
@@ -51,6 +32,25 @@ The call creates a fresh environment
 ```
 
 and passes it to the callee.
+
+---
+
+```
+function(x)
+  x+y
+```
+
+to
+
+```
+guard_fun_  `+` == .Primitive(+)
+ldvar_  x
+ldvar_  y
+add_
+ret_
+```
+
+but what are `x` and `y`?
 
 ---
 

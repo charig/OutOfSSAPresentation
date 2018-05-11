@@ -38,7 +38,11 @@ Referencial Transparency <!-- .element: class="fragment" -->
 
 Note: 
 
-Note that one assignment in the program text does not prevent multiple assignments to a variable during program execution (loops)
+Note that one assignment in the program text does not prevent multiple assignments to a variable during program execution (loops).
+
+Referentially transparent programs are more amenable to formal methods and reasoning, 
+since the meaning of an expression depends only on its subexpressions and not on the 
+order of evaluation or side-effects of other expressions.
 
 ---
 
@@ -91,58 +95,60 @@ Quick access through use-def chains and the manifestation of merge points simpli
 problems. In addition, use-def chains and SSA form allow the old bit vector and integer
 vector analyses to be replaced with sparse analyses. 
 
----
+[comment]: ## <span style="color:blue">C</span>ontrol <span style="color:blue">F</span>low <span style="color:blue">G</span>raph
 
-## <span style="color:blue">C</span>ontrol <span style="color:blue">F</span>low <span style="color:blue">G</span>raph
+[comment]:  ```
+[comment]:  BB0: v1 = 2
+[comment]:      push true 
+[comment]:      branchIfTrue BB2 
+[comment]:  BB1: v1 = 1
+[comment]:      jmp BB3
+[comment]:  BB2: v1 = 2
+[comment]: BB3: val := v1 + v2 \\ This 3-address operators are dubbed quads
+[comment]: ```
 
-```
-BB0: v1 = 2
-     push true 
-     branchIfTrue BB2 
-BB1: v1 = 1
-     jmp BB3
-BB2: v1 = 2
-BB3: val := v1 + v2 \\ This 3-address operators are dubbed quads
-```
-
-* Is val a constant? <!-- .element: class="fragment" -->
-    - Is v1 a constant? <!-- .element: class="fragment" -->
-    - Is v2 a constant? <!-- .element: class="fragment" -->
+[comment]:  * Is val a constant? 
+[comment]:     - Is v1 a constant? 
+[comment]:     - Is v2 a constant? 
 
 
-Note:
-The CFG is a directed graph. The vertices represent basic blocks and the edges represent possible directions
-of program control flow. A basic block is a section of code with no control flow.
+[comment]:  Note:
+[comment]:  The CFG is a directed graph. The vertices represent basic blocks and the edges represent possible directions
+[comment]:  of program control flow. A basic block is a section of code with no control flow.
 
-Data-flow analysis collects information about programs at compile time in order to make optimizing code transformations.
+[comment]: Data-flow analysis collects information about programs at compile time in order to make optimizing code transformations.
+
+[comment]: ---
+
+[comment]: ---
+
+[comment]: ## SSA Example
+
+[comment]: ![](Images/zeroAnalysis.png) <!-- .element height="20%" width="85%" style="background:none; border:none; box-shadow:none;" -->
+
+[comment]: Note:
+
+[comment]: When a program is translated into SSA form, variables are renamed at definition points. For certain data-flow problems (e.g. constant propagation) this is exactly the set of program points where data-flow facts may change
+
+[comment]: 1. Vectors with assigment locations for each variable.
+[comment]:    - Carry lot of (unnecessary) information
+[comment]: 2. Use-Def Chains
+[comment]:    - They are much easier in SSA Form
+
+[comment]: The compiler must carry information about assignments to each variable forward to all possible
+[comment]: uses of. This requires carrying vectors of information around, even to assignments that do not use b.
+
+[comment]: Use-def chains represent quick pointers from uses of a variable to the set of its last definitions.
+[comment]: However, many definitions can reach the quad along a different path in the CFG. 
+[comment]: When deciding what happened to b, the compiler must merge the information from each use-def chain.
+
+[comment]: In SSA each variable is assigned only once. Because of this, we only need one use-def chain per use of a variable. 
+
+[comment]: ---
 
 ---
 
 ## SSA Example
-
-![](Images/zeroAnalysis.png) <!-- .element height="20%" width="85%" style="background:none; border:none; box-shadow:none;" -->
-
-Note:
-
-When a program is translated into SSA form, variables are renamed at definition points. For certain data-flow problems (e.g. constant propagation) this is exactly the set of program points where data-flow facts may change
-
-1. Vectors with assigment locations for each variable.
-    - Carry lot of (unnecessary) information
-2. Use-Def Chains
-    - They are much easier in SSA Form
-
-The compiler must carry information about assignments to each variable forward to all possible
-uses of. This requires carrying vectors of information around, even to assignments that do not use b.
-
-Use-def chains represent quick pointers from uses of a variable to the set of its last definitions.
-However, many definitions can reach the quad along a different path in the CFG. 
-When deciding what happened to b, the compiler must merge the information from each use-def chain.
-
-In SSA each variable is assigned only once. Because of this, we only need one use-def chain per use of a variable. 
-
----
-
-## SSA Example II
 
 ![](Images/constantPropagation.png) <!-- .element height="20%" width="85%" style="background:none; border:none; box-shadow:none;" -->
 
@@ -152,7 +158,7 @@ Alternatives
 
 ---
 
-## Analysis Easier in SSA
+## Analyses Easier in SSA
 
 * Copy progragation
 * Constant propagation

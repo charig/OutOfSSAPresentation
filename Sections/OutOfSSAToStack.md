@@ -49,16 +49,16 @@ Discovering stack discipline within one BB:
 ```
 
 ```
-+a +b -b -a -a
- \  \_/  /  /
-  ------'---
++a +b -a -b
+ \  \ /  /
+  ---x---
 ```
 <!-- .element: class="fragment" -->
 
 ```
-+a +b -a -b
- \  \ /  /
-  ---x---
++a +b -b -a -a
+ \  \_/  /  /
+  ------'---
 ```
 <!-- .element: class="fragment" -->
 
@@ -73,14 +73,23 @@ function(x) { if (x) y <- 1 else y <- 2; y }
 <div>
 unnecessary local variable p
 ```
-   push_      2
+   brtrue     0
+   push       2
    set_local  p
-   br_  1
+   br         1
 0:
-   push_      1
+   push       1
    set_local  p
 1:
    ld_local   p
-   ret_
+   ret
 ```
 </div><!-- .element: class="fragment" -->
+
+---
+
+## Relevancy
+
+WebAssembly is a stack machine
+
+more efficient stack usage = smaller binary program = faster page load

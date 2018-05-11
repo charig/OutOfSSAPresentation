@@ -6,9 +6,8 @@ because PHI functions are replaced by variables and copies from/to these variabl
 
 ---
 
-## Biossinot et al. (CGO '09)
+## Reformulating: Quality of Out of SSA is an aggressive **coalescing** problem! 
 
-* Reformulating: Out of SSA is an aggressive <!-- .element: class="fragment" --> **coalescing** problem! 
 * A definition of interference is missing <!-- .element: class="fragment" -->
 
 ---

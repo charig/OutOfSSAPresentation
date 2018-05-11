@@ -1,3 +1,7 @@
+## Closing up!
+
+---
+
 ## Register Allocation
 
 * Linear Scan
@@ -20,7 +24,7 @@ Unfortunately, graph k-coloring is known to be an NP-complete problem, and the i
 
 ---
 
-## Closing up
+## Stuff Revisited
 
 - Phi Semantics
 - Phi Congruence Classes

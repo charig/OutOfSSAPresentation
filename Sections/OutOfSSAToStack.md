@@ -1,4 +1,4 @@
-## What happens when moving to a Stack Machine?
+## What Happens When Moving to a Stack Machine?
 
 ---
 
@@ -126,21 +126,3 @@ RIR
    ret_
 ```
 </div> <!-- .element: class="fragment" -->
-
----
-
-## Concepts
-
-- Phi parallel copies semantics
-- Phi Congruence Classes
-- Live Analysis
-    - Live Ranges
-    - Liveness Sets 
-    - Interference Graphs
-- Coalescing
-- Register Allocator
-- Spilling
-
-
-Note:
-So we start with a simple compiler, and now by needing to move out of ssa to a stack machine we had to revise and implements all this kind of concepts/algorithms,etc. 

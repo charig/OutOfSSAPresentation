@@ -7,6 +7,14 @@ After or before moving out of SSA? <!-- .element: class="fragment" -->
 
 ---
 
+![](Images/ScanVsGraph.png) <!-- .element width="90%" style="background:none; border:none; box-shadow:none;"-->
+
+Note:
+The linear-scan principle is to consider that a procedure is a long basic block and hence live-ranges are approximated as intervals. 
+On the other hand, a graph-based allocator has a much more precise notion of interference. 
+Unfortunately, graph k-coloring is known to be an NP-complete problem, and the interference graphs of programs are arbitrary.
+---
+
 ## Closing up
 
 - Phi Semantics

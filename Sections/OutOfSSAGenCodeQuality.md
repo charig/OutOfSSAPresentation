@@ -6,11 +6,17 @@ because PHI functions are replaced by variables and copies from/to these variabl
 
 ---
 
-## Reformulating: Quality of Out of SSA is an aggressive **coalescing** problem! 
+## Out of SSA Quality is an aggressive **coalescing** problem! 
 
 Note:
 
 A definition of interference is missing=
+
+---
+
+## Coalescing
+
+![](Images/coalescingCode.png) <!-- .element width="40%" style="background:none; border:none; box-shadow:none;"-->
 
 ---
 
@@ -22,7 +28,7 @@ Two variables interfere if
 
 ---
 
-## Coalescing
+## Example
 
 ![](Images/notCoalescing.png) <!-- .element height="20%" width="85%" style="background:none; border:none; box-shadow:none;"-->
 
@@ -108,7 +114,7 @@ a interfere with b if:
 
 ## Efficciency
 
-Just to mention some time and memory consuming issues: <!-- .element: class="fragment" -->
+Time and memory consuming issues: <!-- .element: class="fragment" -->
 
 - Interference Graph    <!-- .element: class="fragment" -->
     - Construction + updates <!-- .element: class="fragment" -->

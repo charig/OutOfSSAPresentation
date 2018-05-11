@@ -169,7 +169,7 @@ In SSA each variable is assigned only once. Because of this, we only need one us
 
 ## Moving Out of SSA
 
-Factors to Take into Account
+Factors to take into account:
 
 1. Correctness
 2. Code Quality

@@ -13,9 +13,11 @@ because PHI functions are replaced by variables and copies from/to these variabl
 
 ---
 
-## First Definition
+## Interference I
 
-Two variables interfere if one is live at a definition point of the other and this definition is not a copy between the two variables.
+Two variables interfere if 
+1. one is live at a definition point of the other, and 
+2. this definition is not a copy between the two variables
 
 ---
 
@@ -24,6 +26,12 @@ Two variables interfere if one is live at a definition point of the other and th
 ![](Images/notCoalescing.png) <!-- .element height="20%" width="85%" style="background:none; border:none; box-shadow:none;"-->
 
 Note:
+After the interference graph is built, unnecessary
+register copy operations are eliminated by coalescing
+or combining the nodes which are the source and targets
+of copy operations if these nodes do not interfere with each other.
+Once two nodes have been coalesced, they must be allocated to the same 
+register, and the copy operation becomes unnecessary.
 
 ---
 
@@ -39,12 +47,26 @@ Note:
 
 ---
 
-TODO: Example
+## Interference is too conservative
+<div style="float: left; width: 25%">
+![](Images/codeCoalescingConsevative.png) <!-- .element height="40%" style="background:none; border:none; box-shadow:none;"-->
+</div> <!-- .element: class="fragment" -->
+<div style="float: left; width: 25%">
+![](Images/conservativeCoalescingIntG.png) <!-- .element height="30%" style="background:none; border:none; box-shadow:none;"-->
+</div> <!-- .element: class="fragment" -->
+<div style="float: left; width: 25%">
+![](Images/codeCoalescingConsevativeII.png) <!-- .element height="40%" style="background:none; border:none; box-shadow:none;"-->
+</div> <!-- .element: class="fragment" -->
+<div style="float: left; width: 25%">
+![](Images/conservativeCoalescingIntGII.png) <!-- .element height="10%" style="background:none; border:none; box-shadow:none;"-->
+</div> <!-- .element: class="fragment" -->
 
-One can notice that, with this conservative interference definition, when a and b are coalesced, the set of interferences of the new variable may be strictly smaller than the union of interferences of a and b . Thus, simply merging the two corresponding nodes in the interference graph is an over-approximation with respect to the interference definition. For example, in a block with two suc- cessive copies b = a and c = a where a is defined before, and b and c (and pos- sibly a ) are used after, it is considered that b and c interfere but that none of them interfere with a . However, after coalescing a and b , c should not interfere anymore with the coalesced variable. Hence the interference graph would have to be updated or rebuilt.
+Note:
+When a and b are coalesced, the interferences of the new variable may be strictly smaller than the union of interferences of a and b. Simply merging the nodes in the interference graph is an over-approximation. 
 
-Note: 
-Updating interference graph is costly
+For example, in a block with two successive copies b = a and c = a where a is defined before, and b and c (and possibly a) are used after, it is considered that b and c interfere but that none of them interfere with a. However, after coalescing a and b , c should not interfere anymore with the coalesced variable. Hence the interference graph would have to be updated or rebuilt.
+
+But updating the interference graph is costly
 
 ---
 
@@ -60,3 +82,32 @@ Updating interference graph is costly
 a interfere with b if: 
 - live(a) intersects live(b) and,
 - Value(a) != Value(b)
+
+---
+
+## Value-Aware Interference
+
+<div style="float: left; width: 20%">
+![](Images/codeCoalescingConsevative.png) <!-- .element height="40%" style="background:none; border:none; box-shadow:none;"-->
+</div> <!-- .element: class="fragment" -->
+<div style="float: left; width: 20%">
+![](Images/aggressiveCoalescingIntG.png) <!-- .element height="30%" style="background:none; border:none; box-shadow:none;"-->
+</div> <!-- .element: class="fragment" -->
+<div style="float: left; width: 20%">
+![](Images/codeCoalescingConsevativeII.png) <!-- .element height="40%" style="background:none; border:none; box-shadow:none;"-->
+</div> <!-- .element: class="fragment" -->
+<div style="float: left; width: 20%">
+![](Images/aggresiveCoalescingIntGII.png) <!-- .element height="10%" style="background:none; border:none; box-shadow:none;"-->
+</div> <!-- .element: class="fragment" -->
+<div style="float: left; width: 20%">
+![](Images/codeCoalescingAggressive.png) <!-- .element height="10%" style="background:none; border:none; box-shadow:none;"-->
+</div> <!-- .element: class="fragment" -->
+
+---
+
+## Time and Memory Consuming
+
+- Interference Graph
+    - Construction + updates
+- Liveness analysis on inflated #vars
+- Interference checks between each two vars     

@@ -21,108 +21,66 @@ The problem is mainly that we have stack operands in rir, but then we move to a 
 
 SSA
 ```
-x = y + 3
+function(x, y)
+  x + y
 ```
 
-Native Code:
+naively using local variables
 ```
-add r1, 3
-mov r2, r1
-```
-
-RIR:
-```
-load loc(y)
-push 3
-add 
-store loc(x)
-```
-
----
-
-## Ideally
-
-If
-1. y is just produced and,
-2. the results is consumed afterwards and,
-3. consumed just once:
-
-```
-# code that leaves y on top of the stack
-    push 3
-    add 
-# code that consumes the result
+load_arg 0
+store_local x
+load_arg 1
+store_local y
+load_local x
+load_local y
+add
 ```
 
 ---
 
 ## Solutions
 
-Spilling phase?
+Discovering stack discipline within one BB:
 
-Note:    
+```
++a +b -b -a
+ \  \_/  /
+  -------
+```
+
+```
++a +b -b -a -a
+ \  \_/  /  /
+  ------'---
+```
+<!-- .element: class="fragment" -->
+
+```
++a +b -a -b
+ \  \ /  /
+  ---x---
+```
+<!-- .element: class="fragment" -->
 
 ---
 
-## Mappings + extra PHI copies
+### Sinking Phis to stack
 
-Source
-``` 
+```
 function(x) { if (x) y <- 1 else y <- 2; y }
 ```
 
-RIR
+<div>
+unnecessary local variable p
 ```
-   ldvar_  5 # x
-   asbool_
-   brtrue_  0
-   push_  8 # [1] 2
-   stvar_  9 # y
+   push_      2
+   set_local  p
    br_  1
 0:
-   push_  10 # [1] 1
-   stvar_  9 # y
+   push_      1
+   set_local  p
 1:
-   ldvar_  9 # y
-   ret_
-
-```
-
----
-
-## RIR After PIR Naive
-
-<div style="text-align: left; float: left; width: 30%">
-
-```
-   ldarg_  0
-   stloc_  @1
-   ldloc_  @1
-   force_
-   stloc_  @2
-   ldloc_  @2
-   aslogical_
-   stloc_  @3
-   ldloc_  @3
-   asbool_
-   stloc_  @4
-   ldloc_  @4
-   brtrue_  0
-```
-</div> <!-- .element: class="fragment" -->
-<div style="text-align: left; float: right; width: 70%">
-```
-   push_  8 # [1] 2
-   stloc_  @5
-   movloc_  @5 -> @0  # ssa copy predecessor 
-   br_  1
-0:
-   push_  10 # [1] 1
-   stloc_  @6
-   movloc_  @6 -> @0  # ssa copy predecessor
-1:
-   movloc_  @0 -> @7  # ssa copy after phi
-   ldloc_  @7
+   ld_local   p
    ret_
 ```
-</div> <!-- .element: class="fragment" -->
+</div><!-- .element: class="fragment" -->

@@ -85,7 +85,30 @@ In terms of their position, φ-functions⋆are generally placed at control-flow 
 
 ---
 
+## Data-Flow Analysis Example
+
+![](Images/constantPropagation.png) <!-- .element height="20%" width="85%" style="background:none; border:none; box-shadow:none;" -->
+
+Note:
+Difference between sparse and dense representations 
+
+Def-use and use-def chains represent quick pointers from uses/def of a variable to the set of its uses/definitions.
+Useful for lot of data-flow analysis.
+In SSA each variable is assigned only once. Because of this, we only need one use-def chain per use of a variable
+
+---
+
 ## SSA enables the convenient expression of several **data-flow analyses**
+
+---
+
+## Analyses Easier in SSA
+
+* Copy progragation
+* Constant propagation
+* Liveness analysis
+* Redundancy elimination
+* ...
 
 ---
 
@@ -141,29 +164,6 @@ vector analyses to be replaced with sparse analyses.
 [comment]: 1. Vectors with assigment locations for each variable.
 [comment]: The compiler must carry information about assignments to each variable forward to all possible
 [comment]: uses of. This requires carrying vectors of information around, even to assignments that do not use b.
-
----
-
-## SSA Example
-
-![](Images/constantPropagation.png) <!-- .element height="20%" width="85%" style="background:none; border:none; box-shadow:none;" -->
-
-Note:
-Difference between sparse and dense representations 
-
-Def-use and use-def chains represent quick pointers from uses/def of a variable to the set of its uses/definitions.
-Useful for lot of data-flow analysis.
-In SSA each variable is assigned only once. Because of this, we only need one use-def chain per use of a variable
-
----
-
-## Analyses Easier in SSA
-
-* Copy progragation
-* Constant propagation
-* Liveness analysis
-* Redundancy elimination
-* ...
 
 ---
 

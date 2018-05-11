@@ -8,7 +8,9 @@ because PHI functions are replaced by variables and copies from/to these variabl
 
 ## Reformulating: Quality of Out of SSA is an aggressive **coalescing** problem! 
 
-* A definition of interference is missing <!-- .element: class="fragment" -->
+Note:
+
+A definition of interference is missing=
 
 ---
 
@@ -104,9 +106,11 @@ a interfere with b if:
 
 ---
 
-## Time and Memory Consuming
+## Efficciency
 
-- Interference Graph
-    - Construction + updates
-- Liveness analysis on inflated #vars
-- Interference checks between each two vars     
+Just to mention some time and memory consuming issues: <!-- .element: class="fragment" -->
+
+- Interference Graph    <!-- .element: class="fragment" -->
+    - Construction + updates <!-- .element: class="fragment" -->
+- Liveness analysis on inflated #vars <!-- .element: class="fragment" -->
+- Interference checks between each two vars <!-- .element: class="fragment" -->     

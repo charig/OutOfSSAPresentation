@@ -1,5 +1,7 @@
 ## <span style="color:blue">S</span>tatic <span style="color:blue">S</span>ingle <span style="color:blue">A</span>ssignment 
 
+Developed at IBM Research during the 80 
+
 ---
 
 ## Motivation 
@@ -9,6 +11,12 @@
 
 Note: 
 In practice, factors such as the programmer's willingness to wait for the compiler to complete its task place upper limits on the optimizations that a compiler implementor might provide.
+
+Historical Context. Throughout the 1980s, various (IRs) were proposed to encapsulate 
+data dependence in a way that enabled fast and accurate dataflow analysis. 
+The motivation was the exposure of direct links between variable definitions and uses, 
+known as def-use chains, enabling efficient propagation of data-flow information. 
+Example IRs include the program dependence graph [146] and program dependence web [252].
 
 ---
 
@@ -131,20 +139,8 @@ vector analyses to be replaced with sparse analyses.
 [comment]: When a program is translated into SSA form, variables are renamed at definition points. For certain data-flow problems (e.g. constant propagation) this is exactly the set of program points where data-flow facts may change
 
 [comment]: 1. Vectors with assigment locations for each variable.
-[comment]:    - Carry lot of (unnecessary) information
-[comment]: 2. Use-Def Chains
-[comment]:    - They are much easier in SSA Form
-
 [comment]: The compiler must carry information about assignments to each variable forward to all possible
 [comment]: uses of. This requires carrying vectors of information around, even to assignments that do not use b.
-
-[comment]: Use-def chains represent quick pointers from uses of a variable to the set of its last definitions.
-[comment]: However, many definitions can reach the quad along a different path in the CFG. 
-[comment]: When deciding what happened to b, the compiler must merge the information from each use-def chain.
-
-[comment]: In SSA each variable is assigned only once. Because of this, we only need one use-def chain per use of a variable. 
-
-[comment]: ---
 
 ---
 
@@ -153,8 +149,11 @@ vector analyses to be replaced with sparse analyses.
 ![](Images/constantPropagation.png) <!-- .element height="20%" width="85%" style="background:none; border:none; box-shadow:none;" -->
 
 Note:
+Difference between sparse and dense representations 
 
-Alternatives
+Def-use and use-def chains represent quick pointers from uses/def of a variable to the set of its uses/definitions.
+Useful for lot of data-flow analysis.
+In SSA each variable is assigned only once. Because of this, we only need one use-def chain per use of a variable
 
 ---
 

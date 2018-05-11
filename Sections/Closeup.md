@@ -1,9 +1,13 @@
 ## Register Allocation
 
-- Linear Scan
-- Graph Coloring    
+* Linear Scan
+* Graph Coloring
+    
 
 After or before moving out of SSA? <!-- .element: class="fragment" -->
+
+* Interference graphs in SSA are chordal (coloring in polynomial time) <!-- .element: class="fragment" -->
+* But has more variables... <!-- .element: class="fragment" -->
 
 ---
 
@@ -13,6 +17,7 @@ Note:
 The linear-scan principle is to consider that a procedure is a long basic block and hence live-ranges are approximated as intervals. 
 On the other hand, a graph-based allocator has a much more precise notion of interference. 
 Unfortunately, graph k-coloring is known to be an NP-complete problem, and the interference graphs of programs are arbitrary.
+
 ---
 
 ## Closing up

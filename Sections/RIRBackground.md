@@ -4,7 +4,16 @@ RIR encompasses a whole (eventually speculative) compilation infrastructure for 
 
 ---
 
-### RIR
+## RIR
+
+---
+
+```
+function(x)
+  x+y
+```
+
+---
 
 ```
 function(x)
@@ -14,11 +23,11 @@ function(x)
 to
 
 ```
-   guard_fun_  + == 0x14bcc70
-   ldvar_  x
-   ldvar_  y
-   add_
-   ret_
+guard_fun_  `+` == .Primitive(+)
+ldvar_  x
+ldvar_  y
+add_
+ret_
 ```
 
 But what are `x` and `y`?
@@ -29,10 +38,10 @@ But what are `x` and `y`?
 
 
 ```
-  y <- 1
-  f <- function(x)
-    x + y
-  f(2)
+y <- 1
+f <- function(x)
+  x + y
+f(2)
 ```
 
 The call creates a fresh environment
@@ -45,31 +54,144 @@ and passes it to the callee.
 
 ---
 
-### PIR
+## PIR
+
+---
 
 ```
 function(x)
   x+y
 ```
 
+be explicit
 ```
-  val^   %0  = LdArg     0
-  env    e1  = MkEnv     parent=<environment: R_GlobalEnv>, x=%0
-  val^?  %2  = LdVar     x, e1
-  val    %3  = Force     %1
-  val^?  %4  = LdVar     y, e1
-  val    %5  = Force     %1
-  val    %6  = Add       %1, %1
-  void         Return    %1
+%0  = LdArg    0
+e1  = MkEnv    parent=<R_GlobalEnv>, x=%0
+%2  = LdVar    x, e1
+%3  = Force    %2
+%4  = LdVar    y, e1
+%5  = Force    %4
+%6  = Add      %3, %5
+      Return   %6
+```
+
+---
+
+```
+function(x)
+  x+y
+```
+
+promote loads
+```
+%0  = LdArg    0
+e1  = MkEnv    parent=<R_GlobalEnv>, x=%0
+
+%3  = Force    %0
+%4  = LdVar    y, e1
+%5  = Force    %4
+%6  = Add      %3, %5
+      Return   %6
+```
+
+---
+
+```
+function(x)
+  x+y
+```
+
+promote loads
+```
+%0  = LdArg    0
+e1  = MkEnv    parent=<R_GlobalEnv>, x=%0
+
+%3  = Force    %0
+%4  = LdVar    y, <R_GlobalEnv>
+%5  = Force    %4
+%6  = Add      %3, %5
+      Return   %6
+```
+
+---
+
+```
+function(x)
+  x+y
 ```
 
 look, no env
+```
+%0  = LdArg    0
+
+
+%3  = Force    %0
+%4  = LdVar    y, <R_GlobalEnv>
+%5  = Force    %4
+%6  = Add      %3, %5
+      Return   %6
+```
+
+---
 
 ```
-  val^   %0  = LdArg     0
-  val    %1  = Force     %0
-  val^?  %2  = LdVar     y, <environment: R_GlobalEnv>
-  val    %3  = Force     %2
-  val    %4  = Add       %1, %3
-  void         Return    %4
+function(x) {
+  g()
+  x+y
+}
 ```
+
+---
+
+```
+function(x)
+  { g(); x+y }
+```
+
+not always that easy
+```
+%0  = LdFun     g, <R_GlobalEnv>
+%1  = LdArg     0
+e2  = MkEnv     parent=<R_GlobalEnv>, x=%1
+%3  = Call      e2, %0                      ; env leak
+...
+```
+
+---
+
+```
+function(x) {
+  if (x)
+    x <- 1
+  else
+    x <- 2
+  x
+}
+```
+
+---
+
+```
+function(x) {
+  if (x) x <- 1 else x <- 2
+  x
+}
+```
+
+look, no mutable vars
+```
+BB0
+  %0  = LdArg      0
+        ...
+        Branch     -> BB1 (if true) | BB2 (if false)
+BB1
+  %1  = LdConst    1
+  goto BB3
+BB2
+  %2  = LdConst    2
+  goto BB3
+BB3
+  %3  = Phi        %1:BB1, %2:BB2
+  Return           %3
+```
+
